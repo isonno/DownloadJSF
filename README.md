@@ -14,6 +14,10 @@ library, which is installed with
 
 (the `sudo` prefix may or may not be necessary depending on your system configuration). The script's `#!` directive assumes Python3 is in `/usr/local/bin/python3`, you may need to revise that for your configuration.
 
+### Usage
+
+Simply running the scripts prompts for your JSFiddle.net login credentials, and downloads all of the fiddles on your account to a folder named `fiddles/` in the current directory.
+
 The script has the following command line arguments:
 
 * `-u` _email_ 
