@@ -16,7 +16,7 @@ library, which is installed with
 
 ### Usage
 
-Simply running the scripts prompts for your JSFiddle.net login credentials, and downloads all of the fiddles on your account to a folder named `fiddles/` in the current directory.
+Simply running the script prompts for your JSFiddle.net login credentials, and downloads all of the fiddles on your account to a folder named `fiddles/` in the current directory.
 
 The script has the following command line arguments:
 
