@@ -7,7 +7,7 @@ The files are each saved as a single HTML file containing the script, HTML, and 
 
 ### Setup
 
-The script is written in [Python3](https://www.python.org). It also uses the [Requests](https://2.python-requests.org/en/master/)
+The script is written in [Python3](https://www.python.org). It also uses the [Requests](https://docs.python-requests.org/en/master/)
 library, which is installed with
 
     sudo python3 -m pip install requests
