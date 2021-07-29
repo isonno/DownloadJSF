@@ -17,7 +17,7 @@ from html.parser import HTMLParser
 
 # These URLs work as of August 2019
 loginURL = "https://jsfiddle.net/user/login/"
-userListURL = "https://jsfiddle.net/user/dashboard/fiddles/"
+userListURL = "https://jsfiddle.net/user/fiddles/all/"
 # First param is username, second is the fiddle ID
 fiddleURL = "https://fiddle.jshell.net/%s/%s/show/light/"
 
@@ -60,16 +60,23 @@ class ParseFiddles(HTMLParser):
         self.parsingAnchor = False
         self.userName = None
         self.fiddleID = ""
+        self.nextPages = set()
         HTMLParser.__init__(self)
 
     def handle_starttag(self, tag, attrs):
         if (tag != 'a'):
             return
-        if (len(attrs) == 1 and attrs[0][0] == 'href' and re.match("[/]\w+[/]\w+[/]", attrs[0][1])):
+ #       print(str(len(attrs)) + "," + attrs[0][1])
+        if (len(attrs) == 1 and attrs[0][0] == 'href' and re.match("[/]\w+[/]\w+[/](\d+[/])*$", attrs[0][1])):
             m = re.match("[/](\w+)[/](\w+)[/]", attrs[0][1])
             self.fiddleID = m.group(2)
-            self.userName = m.group(1)
-            self.parsingAnchor = True
+            if not (self.fiddleID in ['groups', 'logout']):
+                self.userName = m.group(1)
+                self.parsingAnchor = True
+        elif (len(attrs) == 1 and attrs[0][0] == 'href'):
+            m = re.match("[/]user[/]fiddles[/]all[/](\d+)/", attrs[0][1])
+            if m:
+                self.nextPages.add(m.group(1))
 
     def handle_data(self, data):
         if (self.parsingAnchor):
@@ -147,6 +154,10 @@ def main():
     fiddleListPage = requests.get(userListURL, headers=JSFheaders, cookies=post.cookies)
     fiddleListParser = ParseFiddles()
     fiddleListParser.feed(fiddleListPage.text)
+    extraPages = sorted(list(fiddleListParser.nextPages))
+    for page in extraPages:
+        nextFiddlePage = requests.get(userListURL + page, headers=JSFheaders, cookies=post.cookies)
+        fiddleListParser.feed(nextFiddlePage.text)
 
     keepcharacters = (' ','.','_')
 
