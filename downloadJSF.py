@@ -66,10 +66,11 @@ class ParseFiddles(HTMLParser):
     def handle_starttag(self, tag, attrs):
         if (tag != 'a'):
             return
- #       print(str(len(attrs)) + "," + attrs[0][1])
+
         if (len(attrs) == 1 and attrs[0][0] == 'href' and re.match("[/]\w+[/]\w+[/](\d+[/])*$", attrs[0][1])):
             m = re.match("[/](\w+)[/](\w+)[/]", attrs[0][1])
             self.fiddleID = m.group(2)
+            # Skip these "ID"s, they're structural
             if not (self.fiddleID in ['groups', 'logout']):
                 self.userName = m.group(1)
                 self.parsingAnchor = True
